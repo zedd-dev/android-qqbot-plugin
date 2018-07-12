@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 from qqbot.utf8logger import DEBUG
 from qqbot import qqbotsched
+from random import choice
 
 def onQQMessage(bot, contact, member, content):
     context = Context(bot, contact, member, content)
@@ -19,7 +19,7 @@ def onQQMessage(bot, contact, member, content):
             elif any(k in CONTENT for k in ['教程','基础','学习']):
                 learnLink(context)
         if '@ME' in content:
-            send(context, member.name+'鸡鸡飞啦！')
+            send(context, member.name+choice(LongText.aStupidGuyAtMe))
 
 def downloadLink(context):
     CONTENT = context.content.upper()
@@ -102,3 +102,9 @@ class LongText:
 2. https://www.w3cschool.cn/android/
 欢迎在 https://github.com/zedcn-com/android-qqbot-plugin 通过PR或者issue提交你的推荐。 
 """
+    aStupidGuyAtMe = [
+        "，what are you 弄啥lei。",
+        "  Surprise montherf**ker.",
+        "的鸡鸡飞啦！",
+        " 满♂身♂大♂汉"
+    ]
