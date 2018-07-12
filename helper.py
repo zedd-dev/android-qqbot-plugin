@@ -73,6 +73,10 @@ def tools(context):
 
 def nslookup(context,cmd):
     m = re.match(r"\s?[解析域名nslookup]+\s?(.+)",cmd)
+    #TODO 也许有更好的处理办法
+    if any(k in cmd for k in ['&','\\']):
+        send(context,"包含非法字符")
+        return
     if m != None:
         name = m[1]
         send(context,subprocess.getoutput('nslookup '+name))
