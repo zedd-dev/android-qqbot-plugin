@@ -2,6 +2,7 @@ from qqbot.utf8logger import DEBUG
 from qqbot import qqbotsched
 from random import choice
 import re
+import subprocess
 
 def onQQMessage(bot, contact, member, content):
     context = Context(bot, contact, member, content)
@@ -65,9 +66,18 @@ def tools(context):
     m = re.match(r"\s?[tool帮我]+\s?(.+)",txt)
     if m != None:
         cmd = m.group(1)
-        send(context,cmd)
+        if any(k in cmd for k in ['解析域名','nslookup']):
+            nslookup(context,cmd)
     else:
         send(context,'解析错误，请以【@QQBot tool 命令】或者【@QQBot 帮我 命令】发送。')
+
+def nslookup(context,cmd):
+    m = re.match(r"\s?[解析域名nslookup]+\s?(.+)",cmd)
+    if m != None:
+        name = m[1]
+        send(context,subprocess.getoutput('nslookup '+name))
+    else:
+        send(context,'解析错误，请以【@QQBot tool nslookup example.com】或者【@QQBot 帮我解析域名 example.com】发送。')
 
 @qqbotsched(hour='07', minute='00', day_of_week='mon-fri')
 def morningTask(bot):
