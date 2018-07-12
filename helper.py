@@ -66,6 +66,8 @@ def tools(context):
     if m != None:
         cmd = m.group(1)
         send(context,cmd)
+    else:
+        send(context,'解析错误，请以【@QQBot tool 命令】或者【@QQBot 帮我 命令】发送。')
 
 @qqbotsched(hour='07', minute='00', day_of_week='mon-fri')
 def morningTask(bot):
