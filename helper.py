@@ -1,6 +1,7 @@
 from qqbot.utf8logger import DEBUG
 from qqbot import qqbotsched
 from random import choice
+import re
 
 def onQQMessage(bot, contact, member, content):
     context = Context(bot, contact, member, content)
@@ -19,7 +20,10 @@ def onQQMessage(bot, contact, member, content):
             elif any(k in CONTENT for k in ['教程','基础','学习','GUIDE','指南']):
                 learnLink(context)
         if '@ME' in content:
-            send(context, member.name+choice(LongText.aStupidGuyAtMe))
+            if any(k in CONTENT for k in ['TOOL','帮我']):
+                tools(context)
+            else:
+                send(context, member.name+choice(LongText.aStupidGuyAtMe))
 
 def downloadLink(context):
     CONTENT = context.content.upper()
@@ -55,6 +59,13 @@ def learnLink(context):
         send(context,LongText.learnJava)
     elif any(k in CONTENT for k in ['ANDROID','安卓']):
         send(context,LongText.learnAndroid)
+
+def tools(context):
+    txt = context.content[6:]
+    m = re.match(r"\s?[tool帮我]+\s?(.+)",txt)
+    if m != None:
+        cmd = m.group(1)
+        send(context,cmd)
 
 @qqbotsched(hour='07', minute='00', day_of_week='mon-fri')
 def morningTask(bot):
