@@ -14,9 +14,9 @@ def onQQMessage(bot, contact, member, content):
         if contact.ctype == 'group':
             if '下载' in content :
                 downloadLink(context)
-            elif any(k in CONTENT for k in ['文档','API DOC','DOCUMENT']):
+            elif any(k in CONTENT for k in ['文档','API','DOCUMENT']):
                 documentLink(context)
-            elif any(k in CONTENT for k in ['教程','基础','学习']):
+            elif any(k in CONTENT for k in ['教程','基础','学习','GUIDE','指南']):
                 learnLink(context)
         if '@ME' in content:
             send(context, member.name+choice(LongText.aStupidGuyAtMe))
@@ -94,6 +94,9 @@ class LongText:
 """
 
     learnAndroid = """
+========================
+官方入门教程：https://developer.android.google.cn/guide/
+========================
 书籍推荐（*为深入/高级）：
 1. 《第一行代码：Android》-- https://www.amazon.cn/dp/B01MSR5D04
 2. 《Android从入门到精通（再到转行）》-- https://www.amazon.cn/dp/B00NHCI0RI
