@@ -1,22 +1,9 @@
 from qqbot.utf8logger import DEBUG
 from qqbot import qqbotsched
 from random import choice
+from abotcommon import Context,send
+from abotcmd import toolProcess
 import re
-import subprocess
-
-class Context:
-    def __init__(self, bot, contact, member, content):
-        self.bot = bot
-        self.contact = contact
-        self.member = member
-        self.content = content
-
-class CmdHelper:
-    def __init__(self, cmd, cmdCN, desc, etc):
-        self.cmd = cmd
-        self.cmdCN = cmdCN
-        self.desc = desc
-        self.etc = etc
 
 def onQQMessage(bot, contact, member, content):
     context = Context(bot, contact, member, content)
@@ -36,7 +23,7 @@ def onQQMessage(bot, contact, member, content):
                 learnLink(context)
         if '@ME' in content:
             if any(k in CONTENT for k in ['TOOL','工具']):
-                tools(context)
+                toolProcess(context)
             else:
                 send(context, member.name+choice(LongText.aStupidGuyAtMe))
 
@@ -75,52 +62,6 @@ def learnLink(context):
     elif any(k in CONTENT for k in ['ANDROID','安卓']):
         send(context,LongText.learnAndroid)
 
-def tools(context):
-    txt = context.content.replace('[@ME]','')
-    cmd = getToolCMD(txt)
-    if cmd == None:
-        send(context,'解析错误，请以【@QQBot tool cmd】或者【@QQBot 工具 命令】格式发送。发送【@QQBot tool help】查询所有命令')
-    elif any(k in cmd for k in ['解析域名','nslookup']):
-        cmdNslookup(context,cmd)
-    elif any(k in cmd for k in ['help','帮助']):
-        cmdHelp(context)
-       
-
-def getToolCMD(txt):
-    m = re.match(r"^\s*[tool|工具]+\s*(\S.*)$",txt)
-    if m != None:
-        return m[1]
-    return None
-
-cmdHelpers = [
-    CmdHelper('nslookup','解析域名','返回指定域名的DNS解析结果','直接解析：nslookup z.cn，指定dns解析：nslookup z.cn 8.8.8.8')
-]
-
-def cmdHelp(context):
-    str = "以下是目前所有的命令：\n\n"
-    for help in cmdHelpers:
-        str += "┌─[{0}] {1}\n".format(help.cmd,help.desc)
-        str += "├─中文指令：{0}\n".format(help.cmdCN)
-        str += "└─使用方法：{0}\n".format(help.etc)
-    send(context,str)
-
-def cmdNslookup(context,cmd):
-    help = cmdHelpers[0]
-    p = re.compile("^\s*[{0}|{1}]+\s*(\S.*)$".format(help.cmd,help.cmdCN))
-    m = p.match(cmd)
-    if cmdIsInvalid(cmd):
-        send(context,"包含非法字符")
-        return
-    if m == None or len(m[1]) <= 1: #不要问我这里为什么会等于1，鬼知道
-        send(context,'解析错误。{0}'.format(help.etc))
-    else:
-        send(context,subprocess.getoutput('nslookup ' + m[1]))
-
-
-def cmdIsInvalid(cmd):
-    #TODO 也许有更好的处理办法
-    return any(k in cmd for k in ['&','\\','>','<'])
-
 @qqbotsched(hour='07', minute='00', day_of_week='mon-fri')
 def morningTask(bot):
     g = bot.List('group', 'Android Studio C群')[0]
@@ -131,8 +72,7 @@ def nightTask(bot):
     g = bot.List('group', 'Android Studio C群')[0]
     bot.SendTo(g,'各位大佬，赶紧睡觉了，都他妈十一点了。像你们这种穷逼，只有身体才是资本。')
 
-def send(context, text):
-    context.bot.SendTo(context.contact, text, resendOn1202=True)
+
 
 class LongText:
     learnJava = """

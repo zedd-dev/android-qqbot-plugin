@@ -1,7 +1,7 @@
 #!/bin/bash
 git pull --rebase
 if [ $? -eq 0 ];then
-    cp -f ./helper.py ~/.qqbot-tmp/plugins/
-    qq unplug helper
-    qq plug helper
+    cp -f ./*.py ~/.qqbot-tmp/plugins/
+    qq unplug androidbot
+    qq plug androidbot
 fi
