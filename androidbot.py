@@ -1,6 +1,9 @@
 from qqbot.utf8logger import DEBUG
 from qqbot import qqbotsched
 from random import choice
+from abotcommon import Context,send
+from abotcmd import toolProcess
+import re
 
 def onQQMessage(bot, contact, member, content):
     context = Context(bot, contact, member, content)
@@ -19,7 +22,10 @@ def onQQMessage(bot, contact, member, content):
             elif any(k in CONTENT for k in ['教程','基础','学习','GUIDE','指南']):
                 learnLink(context)
         if '@ME' in content:
-            send(context, member.name+choice(LongText.aStupidGuyAtMe))
+            if any(k in CONTENT for k in ['TOOL','工具']):
+                toolProcess(context)
+            else:
+                send(context, member.name+choice(LongText.aStupidGuyAtMe))
 
 def downloadLink(context):
     CONTENT = context.content.upper()
@@ -66,17 +72,7 @@ def nightTask(bot):
     g = bot.List('group', 'Android Studio C群')[0]
     bot.SendTo(g,'各位大佬，赶紧睡觉了，都他妈十一点了。像你们这种穷逼，只有身体才是资本。')
 
-def send(context, text):
-    context.bot.SendTo(context.contact, text, resendOn1202=True)
 
-
-
-class Context:
-    def __init__(self, bot, contact, member, content):
-        self.bot = bot
-        self.contact = contact
-        self.member = member
-        self.content = content
 
 class LongText:
     learnJava = """
