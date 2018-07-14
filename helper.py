@@ -64,20 +64,20 @@ def learnLink(context):
 def tools(context):
     txt = context.content.replace('[@ME]','')
     cmd = getToolCMD(txt)
-    if any(k in cmd for k in ['解析域名','nslookup']):
+    if cmd != None and any(k in cmd for k in ['解析域名','nslookup']):
         cmdNslookup(context,cmd)
     else:
         send(context,'解析错误，请以【@QQBot tool cmd】或者【@QQBot 工具 命令】格式发送。发送【@QQBot tool help】查询所有命令')
 
 def getToolCMD(txt):
-    for p in ToolsHelper.pts:
-        m = re.match(p,txt)
-        if m != None:
-            return m[1]
+    DEBUG(txt)
+    m = re.match(r"^\s*[tool|工具]+\s*(\S.*)$",txt)
+    if m != None:
+        return m[1]
     return None
 
 def cmdNslookup(context,cmd):
-    m = re.match(r"\s?((解析域名)|(nslookup))+\s?(.+)",cmd)
+    m = re.match(r"^\s*[解析域名|nslookup]+\s*(\S.*)$",cmd)
     if cmdIsInvalid(cmd):
         send(context,"包含非法字符")
         return
@@ -103,11 +103,6 @@ def nightTask(bot):
 
 def send(context, text):
     context.bot.SendTo(context.contact, text, resendOn1202=True)
-
-class ToolsHelper
-    pts = []
-    for key in ["工具","tool"]:
-        pts.append(re.compile("^\s?{0}\s(\S.+)$".format(key)))
 
 class Context:
     def __init__(self, bot, contact, member, content):
