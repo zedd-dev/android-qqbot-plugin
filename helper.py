@@ -21,7 +21,7 @@ def onQQMessage(bot, contact, member, content):
             elif any(k in CONTENT for k in ['教程','基础','学习','GUIDE','指南']):
                 learnLink(context)
         if '@ME' in content:
-            if any(k in CONTENT for k in ['TOOL','帮我']):
+            if any(k in CONTENT for k in ['TOOL','工具']):
                 tools(context)
             else:
                 send(context, member.name+choice(LongText.aStupidGuyAtMe))
@@ -62,26 +62,34 @@ def learnLink(context):
         send(context,LongText.learnAndroid)
 
 def tools(context):
-    txt = context.content[6:]
-    m = re.match(r"\s?[tool帮我]+\s?(.+)",txt)
-    if m != None:
-        cmd = m.group(1)
-        if any(k in cmd for k in ['解析域名','nslookup']):
-            nslookup(context,cmd)
+    txt = context.content.replace('[@ME]','')
+    cmd = getToolCMD(txt)
+    if any(k in cmd for k in ['解析域名','nslookup']):
+        cmdNslookup(context,cmd)
     else:
-        send(context,'解析错误，请以【@QQBot tool 命令】或者【@QQBot 帮我 命令】发送。')
+        send(context,'解析错误，请以【@QQBot tool cmd】或者【@QQBot 工具 命令】格式发送。发送【@QQBot tool help】查询所有命令')
 
-def nslookup(context,cmd):
-    m = re.match(r"\s?[解析域名nslookup]+\s?(.+)",cmd)
-    #TODO 也许有更好的处理办法
-    if any(k in cmd for k in ['&','\\']):
+def getToolCMD(txt):
+    for p in ToolsHelper.pts:
+        m = re.match(p,txt)
+        if m != None:
+            return m[1]
+    return None
+
+def cmdNslookup(context,cmd):
+    m = re.match(r"\s?((解析域名)|(nslookup))+\s?(.+)",cmd)
+    if cmdIsInvalid(cmd):
         send(context,"包含非法字符")
         return
     if m != None:
         name = m[1]
         send(context,subprocess.getoutput('nslookup '+name))
     else:
-        send(context,'解析错误，请以【@QQBot tool nslookup example.com】或者【@QQBot 帮我解析域名 example.com】发送。')
+        send(context,'解析错误，请以【@QQBot tool nslookup example.com】或者【@QQBot 工具 解析域名 example.com】发送。')
+
+def cmdIsInvalid(cmd):
+    #TODO 也许有更好的处理办法
+    return any(k in cmd for k in ['&','\\','>','<'])
 
 @qqbotsched(hour='07', minute='00', day_of_week='mon-fri')
 def morningTask(bot):
@@ -96,7 +104,10 @@ def nightTask(bot):
 def send(context, text):
     context.bot.SendTo(context.contact, text, resendOn1202=True)
 
-
+class ToolsHelper
+    pts = []
+    for key in ["工具","tool"]:
+        pts.append(re.compile("^\s?{0}\s(\S.+)$".format(key)))
 
 class Context:
     def __init__(self, bot, contact, member, content):
