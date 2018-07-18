@@ -64,13 +64,21 @@ def learnLink(context):
 
 @qqbotsched(hour='07', minute='00', day_of_week='mon-fri')
 def morningTask(bot):
-    g = bot.List('group', 'Android Studio C群')[0]
-    bot.SendTo(g,'睡你麻痹起床了，赶紧去给资本家打工。')
+    glist = bot.List('group', ':like:Android')
+    for g in glist:
+        bot.SendTo(g,'睡你麻痹起床了，赶紧去给资本家打工。')
 
 @qqbotsched(hour='23', minute='00', day_of_week='mon-fri')
 def nightTask(bot):
-    g = bot.List('group', 'Android Studio C群')[0]
-    bot.SendTo(g,'各位大佬，赶紧睡觉了，都他妈十一点了。像你们这种穷逼，只有身体才是资本。')
+    glist = bot.List('group', ':like:Android')
+    for g in glist:
+        bot.SendTo(g,'各位大佬，赶紧睡觉了，都他妈十一点了。像你们这种穷逼，只有身体才是资本。')
+
+@qqbotsched(hour='7-21/1')
+def updateGroup(bot):
+    glist = bot.list('group',':like:Android')
+    for g in glist:
+        bot.Update(g)
 
 
 
