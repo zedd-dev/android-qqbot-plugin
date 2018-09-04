@@ -25,7 +25,10 @@ def onQQMessage(bot, contact, member, content):
             if any(k in CONTENT for k in ['TOOL','工具']):
                 toolProcess(context)
             else:
-                send(context, member.name+choice(LongText.aStupidGuyAtMe))
+                stupidStr = choice(LongText.aStupidGuyAtMe)
+                if '%' in stupidStr:
+                    stupidStr = stupidStr % member.name
+                send(context,  stupidStr)
 
 def downloadLink(context):
     CONTENT = context.content.upper()
@@ -110,8 +113,12 @@ class LongText:
 欢迎在 https://github.com/zedcn-com/android-qqbot-plugin 通过PR或者issue提交你的推荐。 
 """
     aStupidGuyAtMe = [
-        "，what are you 弄啥lei。",
-        "  Surprise montherf**ker.",
-        "的鸡鸡飞啦！",
-        " 满♂身♂大♂汉"
+        "%s，what are you 弄啥lei。",
+        "Surprise montherf**ker. %s",
+        "%s的鸡鸡飞啦！",
+        "%s满♂身♂大♂汉",
+        "%s，你好骚啊！",
+        "%s，你食💩真骚！",
+        "都听我说一句，我爱中国共产党，好了你们继续。",
+        "一根指向ZZ的指针 ==> %s"
     ]
