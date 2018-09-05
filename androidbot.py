@@ -4,6 +4,12 @@ from random import choice
 from abotcommon import Context,send
 from abotcmd import toolProcess
 import re
+import datetime
+
+def onStartupComplete(bot):
+    glist = bot.List('group', ':like:Android')
+    for g in glist:
+        bot.SendTo(g,'QQBot被神秘力量复活，复活时间：%s' % (datetime.datetime.now().strftime("%y/%m/%d %H:%M")))
 
 def onQQMessage(bot, contact, member, content):
     context = Context(bot, contact, member, content)
