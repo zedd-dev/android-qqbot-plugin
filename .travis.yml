@@ -1,0 +1,19 @@
+language: minimal
+sudo: false
+dist: trusty
+addons:
+  ssh_known_hosts: 
+    - 54.183.247.207
+install:
+  - echo $PRIV_KEY_B64 | base64 -d - > $HOME/.ssh/id_rsa
+  - chmod 600 $HOME/.ssh/id_rsa
+jobs:
+  include:
+    - stage: upload
+      script: 
+        - scp * $USER@$HOST:~/.qqbot-tmp/plugins/
+        - |
+          ssh $USER@$HOST bash -c "
+            qq unplug androidbot
+            qq plug androidbot
+          "
