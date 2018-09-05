@@ -1,6 +1,6 @@
 # Android_QQBot_Plugin
 
-[![CircleCI](https://circleci.com/gh/zedcn-com/android-qqbot-plugin.svg?style=svg)](https://circleci.com/gh/zedcn-com/android-qqbot-plugin)
+[![Build Status](https://travis-ci.org/zedcn-com/android-qqbot-plugin.svg?branch=master)](https://travis-ci.org/zedcn-com/android-qqbot-plugin)
 
 > Android Studio QQ群的机器人回复插件
 
